@@ -15,11 +15,11 @@ for file in os.listdir("./files"):
         sample_trips.append(file)
 
 ### Get Program Args
-parser = argparse.ArgumentParser(description='IoT Device Simulator Built for Mojio Sample Data')
+parser = argparse.ArgumentParser(description='IoT Device Simulator Built for clevertime Sample Data')
 parser.add_argument('--region', dest='region', required=False, default='us-west-2',help='Specify the AWS Region')
 parser.add_argument('--iot-endpoint', dest='iot_endpoint', required=False, default='a28t31er3mx77a-ats.iot.us-west-2.amazonaws.com',help='Specify the AWS IoT Core Endpoint to publish to.')
 parser.add_argument('--simulation-table', dest='simulation_table', required=False, default='simulation-table',help='Specify a DynamoDB Table for storing simulation state.')
-parser.add_argument('--iot-topic', dest='iot_topic', required=False, default='mojio/simulator_rule',help='Specify a IoT Topic to Publish to.')
+parser.add_argument('--iot-topic', dest='iot_topic', required=False, default='clevertime/simulator_rule',help='Specify a IoT Topic to Publish to.')
 parser.add_argument('--trip', dest='trip', required=False,help='Use specific sample trip. e.g. xaa.csv. This must exist in your "files/" directory')
 parser.add_argument('--profile', dest='profile', required=False,help='AWS Profile to use.')
 
