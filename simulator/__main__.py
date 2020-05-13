@@ -29,7 +29,7 @@ simulation_table  = args.simulation_table
 data_location     = "./data/" + args.data + ".json"
 dynamodb          = boto3.resource('dynamodb', region_name=region)
 valid_types       = ["float", "int", "bool", "string"]
-valid_field_attributes = {"float":["type","from","to","average","mode"],"int":["type","from","to","average","mode"], "bool":["type","weight"], "string":["type","possibilities"]}
+valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","average":"float","mode":"string"},"int":{"type":"string","from":"float","to":"float","average":"float","mode":"string"}, "bool":{"type":"string","weight":"float"}, "string":{"type":"string","possibilities":"string"}}
 
 def exit_handler():
     print ('My application is ending!')
@@ -260,13 +260,14 @@ def validate_data(data_location):
 
         for attribute in json_data[field]:
             # check if field attribute is valid
-            #print(attribute + " is in " + str(valid_field_attributes[type]) + " ?")
             if attribute in valid_field_attributes[type]:
                 print("\t[*] valid field attribute: " + attribute)
             else:
                 print("\t[!] '" + attribute + "' is not a valid attribute for a " + json_data[field]["type"] + " field")
                 exit()
-
+            print("\t\t[*] value: " + str(json_data[field][attribute]))
+            print("\t\t[*] expected type: " + str(valid_field_attributes[type][attribute]))
+            #print("\t\t[*] actual type: " + type(json_data[field][attribute]))
 
 # welcome banner
 def welcome():
