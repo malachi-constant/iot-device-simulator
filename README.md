@@ -1,5 +1,5 @@
-### Mojio Simulator Usage
-IoT Device Simulator Built for Mojio Sample Data
+### clevertime Simulator Usage
+IoT Device Simulator Built for clevertime Sample Data
 
 ### Prerequisites
 ##### Python3
@@ -9,11 +9,11 @@ IoT Device Simulator Built for Mojio Sample Data
 
 ### Usage
 ```
-usage: mojio-sim.py [-h] [--region REGION] [--iot-endpoint IOT_ENDPOINT]
+usage: clevertime-sim.py [-h] [--region REGION] [--iot-endpoint IOT_ENDPOINT]
                     [--simulation-table SIMULATION_TABLE]
                     [--iot-topic IOT_TOPIC] [--trip TRIP] [--profile PROFILE]
 
-IoT Device Simulator Built for Mojio Sample Data
+IoT Device Simulator Built for clevertime Sample Data
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -30,5 +30,5 @@ optional arguments:
 ```
 #### Example Execution
 ```
-python3 mojio-sim.py --region us-east-1 --iot-endpoint a28t31er3mx77a-ats.iot.us-east-1.amazonaws.com --simulation-table simulation-table-name --iot-topic connectedcar/telemetry/test
+python3 clevertime-sim.py --region us-east-1 --iot-endpoint a28t31er3mx77a-ats.iot.us-east-1.amazonaws.com --simulation-table simulation-table-name --iot-topic connectedcar/telemetry/test
 ```

@@ -7,3 +7,6 @@ variable "vpc_id" {
 variable "profile" {
   default = ""
 }
+variable "instance_type" {
+  default = "m5.large"
+}
