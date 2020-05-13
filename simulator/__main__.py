@@ -8,33 +8,28 @@ import sys
 import uuid
 import os
 
-### Populate Sample Trips into Array
-sample_trips = []
-for file in os.listdir("./files"):
-    if file.endswith(".csv"):
-        sample_trips.append(file)
-
-### Get Program Args
+# get program arguments
 parser = argparse.ArgumentParser(description='IoT Device Simulator Built for clevertime Sample Data')
 parser.add_argument('--region', dest='region', required=False, default='us-west-2',help='Specify the AWS Region')
 parser.add_argument('--iot-endpoint', dest='iot_endpoint', required=False, default='a28t31er3mx77a-ats.iot.us-west-2.amazonaws.com',help='Specify the AWS IoT Core Endpoint to publish to.')
 parser.add_argument('--simulation-table', dest='simulation_table', required=False, default='simulation-table',help='Specify a DynamoDB Table for storing simulation state.')
 parser.add_argument('--iot-topic', dest='iot_topic', required=False, default='clevertime/simulator_rule',help='Specify a IoT Topic to Publish to.')
-parser.add_argument('--trip', dest='trip', required=False,help='Use specific sample trip. e.g. xaa.csv. This must exist in your "files/" directory')
+parser.add_argument('--data','-d' ,dest='data', required=False, default='sample',help='Data schema file to use.')
 parser.add_argument('--profile', dest='profile', required=False,help='AWS Profile to use.')
 
 args = parser.parse_args()
 
-### Set vars and connections
-objectPrefix = 'files'
-timing_array = []
-sim_id = str(random.randint(10000000,99999999))
+# globals
+simulation_id     = str(random.randint(10000000,99999999))
 iot_core_endpoint = args.iot_endpoint
-iot_topic = args.iot_topic
-region = args.region
-profile = args.profile
-simulation_table = args.simulation_table
-dynamodb = boto3.resource('dynamodb', region_name=region)
+iot_topic         = args.iot_topic
+region            = args.region
+profile           = args.profile
+simulation_table  = args.simulation_table
+data_location     = "./data/" + args.data + ".json"
+dynamodb          = boto3.resource('dynamodb', region_name=region)
+valid_types       = ["float", "int", "bool", "string"]
+valid_field_attributes = {"float":["type","from","to","average","mode"],"int":["type","from","to","average","mode"], "bool":["type","weight"], "string":["type","possibilities"]}
 
 def exit_handler():
     print ('My application is ending!')
@@ -157,28 +152,16 @@ def parseData(trip_data, trip_selection) :
 
     return data_JSON
 
-def runSimulator():
+def run_simulator():
+    # set aws profile
     if profile is not None:
         boto3.setup_default_session(profile_name=profile)
         print("[*] Using AWS Profile: " + str(profile))
 
-    sampleTrip = sample_trips[random.randint(0,(len(sample_trips)-1))]
-    if args.trip is not None:
-        sampleTrip = args.trip
+    # insert logic
 
-    print("[*] Using Sample Trip: " + sampleTrip)
 
-    trip_selection = sampleTrip[2]
-    print("[*] Trip Identifier = " + trip_selection)
 
-    path = objectPrefix + "/" + sampleTrip
-    print ("[*] Path: " + path)
-    try:
-        file_object  = open(path,"r")
-    except:
-        print("Sample Trip File: " + path + " Does not exist")
-        exit()
-    trip_data = file_object.read()
 
     trip_json = parseData(trip_data, trip_selection)
 
@@ -242,22 +225,76 @@ def runSimulator():
         time.sleep(2)
 
 
+# validate json schema
+def validate_data(data_location):
+    print("[*] data file: " + data_location)
 
-
-### Main
-try:
-    runSimulator()
-except KeyboardInterrupt:
-    print("[*] Ending Simulation: " + sim_id + "")
+    # open file
     try:
-        sim_table = dynamodb.Table(simulation_table)
-        sim_table.delete_item(
-        Key={
-            'simulation-id': sim_id,
-        }
-        )
+        file  = open(data_location,"r")
     except:
-        print("\nDynamoDB Table for Simulation State Not Found.\n No record to delete...")
-        time.sleep(2)
+        print("[!] schema file at " + data_location + " does not exist")
+        exit()
+    file_data = file.read()
 
-print("[*] Simulation Completed")
+    # json lint
+    try:
+        json_data = json.loads(file_data)
+    except:
+        print("[!] schema file at " + data_location + " is not valid.json.")
+        exit()
+    print("[*] json is valid")
+
+    # check schema
+    print("[*] validating fields...")
+    for field in json_data:
+        print("[*] field: " + field)
+        # check if field has a type
+        try:
+            if json_data[field]["type"] in valid_types:
+                type = json_data[field]["type"]
+                print("\t[*] valid type: '" + type + "'")
+        except:
+            print("\t[!] field must have a type set")
+            exit()
+
+        for attribute in json_data[field]:
+            # check if field attribute is valid
+            #print(attribute + " is in " + str(valid_field_attributes[type]) + " ?")
+            if attribute in valid_field_attributes[type]:
+                print("\t[*] valid field attribute: " + attribute)
+            else:
+                print("\t[!] '" + attribute + "' is not a valid attribute for a " + json_data[field]["type"] + " field")
+                exit()
+
+
+# welcome banner
+def welcome():
+    print("[*] welcome to the iot device simulator !\n")
+    print("[*] beginning simulation ...")
+
+# main entrypoint
+def main():
+
+    welcome()
+
+    validate_data(data_location)
+    # try:
+    #     run_simulator()
+    # except KeyboardInterrupt:
+    #     print("[*] Ending Simulation: " + sim_id + "")
+    #     try:
+    #         sim_table = dynamodb.Table(simulation_table)
+    #         sim_table.delete_item(
+    #         Key={
+    #             'simulation-id': sim_id,
+    #         }
+    #         )
+    #     except:
+    #         print("\nDynamoDB Table for Simulation State Not Found.\n No record to delete...")
+    #         time.sleep(2)
+    #
+    # print("[*] Simulation Completed")
+
+if __name__ == '__main__':
+    main()

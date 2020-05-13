@@ -1,0 +1,24 @@
+{
+  "temperature": {
+    "type": "float",
+    "from": -100,
+    "to": 100,
+    "average": 30,
+    "mode": "random"
+  },
+  "speed": {
+    "type": "integer",
+    "from": 0,
+    "to": 250,
+    "average": 60,
+    "mode": "linear"
+  },
+  "message": {
+    "type": "string",
+    "possibilities": ["HELLO", "WORLD"]
+  },
+  "powered_on": {
+    "type": "bool",
+    "weight": 5
+  }
+}
