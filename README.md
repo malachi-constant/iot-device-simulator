@@ -9,23 +9,26 @@ IoT Device Simulator Built for clevertime Sample Data
 
 ### Usage
 ```
-usage: clevertime-sim.py [-h] [--region REGION] [--iot-endpoint IOT_ENDPOINT]
-                    [--simulation-table SIMULATION_TABLE]
-                    [--iot-topic IOT_TOPIC] [--trip TRIP] [--profile PROFILE]
+usage: __main__.py [-h] [--region REGION] [--iot-endpoint IOT_ENDPOINT]
+                   [--simulation-table SIMULATION_TABLE]
+                   [--iot-topic IOT_TOPIC] [--data DATA]
+                   [--interval MESSAGE_INTERVAL] [--profile PROFILE]
 
-IoT Device Simulator Built for clevertime Sample Data
+IoT Device Simulator
 
 optional arguments:
   -h, --help            show this help message and exit
-  --region REGION       Specify the AWS Region
-  --iot-endpoint IOT_ENDPOINT
+  --region REGION, -r REGION
+                        Specify the AWS Region
+  --iot-endpoint IOT_ENDPOINT, -e IOT_ENDPOINT
                         Specify the AWS IoT Core Endpoint to publish to.
-  --simulation-table SIMULATION_TABLE
+  --simulation-table SIMULATION_TABLE, -T SIMULATION_TABLE
                         Specify a DynamoDB Table for storing simulation state.
-  --iot-topic IOT_TOPIC
+  --iot-topic IOT_TOPIC, -t IOT_TOPIC
                         Specify a IoT Topic to Publish to.
-  --trip TRIP           Use specific sample trip. e.g. xaa.csv. This must
-                        exist in your "files/" directory
+  --data DATA, -d DATA  Data schema file to use.
+  --interval MESSAGE_INTERVAL, -i MESSAGE_INTERVAL
+                        Message Interval in seconds.
   --profile PROFILE     AWS Profile to use.
 ```
 #### Example Execution
