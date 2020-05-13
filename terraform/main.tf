@@ -46,7 +46,7 @@ resource "aws_launch_configuration" "simulation_fleet" {
     name_prefix = "sim-fleet"
     image_id = "ami-0cc96feef8c6bbff3"
     instance_type = "m5.4xlarge"
-    key_name = "mojio-sim"
+    key_name = "a-sim"
     iam_instance_profile = "${aws_iam_instance_profile.simulation_fleet.id}"
     security_groups = [
       "${aws_security_group.simulation_fleet.id}"

@@ -10,4 +10,3 @@ aws s3 cp s3://simulator-keys/mojio-sim.pem /root/.ssh/id_rsa
 chmod 400 /root/.ssh/id_rsa
 
 aws s3 cp s3://lucas-simulator/simulator simulator/ --recursive
-# git clone git@gitlab.com:missioncloud/proserv/mojio-simulator.git
