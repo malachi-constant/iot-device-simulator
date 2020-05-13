@@ -22,8 +22,21 @@ def float_generate(settings, last_value):
     return value
 
 # handle bool value
-def bool_generate(settings):
-    return True
+def bool_generate(settings, last_value):
+
+    # check if there is a weight
+    if 'weight' in settings.keys():
+
+        # error handling
+        if settings['weight'] > 100 or settings['weight'] < 0:
+            weight = 0
+        else:
+            weight = settings['weight']
+    # calculate weight and allow switch if random is over weight
+    if random.randint(0,100) > weight:
+        return False if calculations.random_direction() == -1 else True
+    else:
+        return last_value
 
 # handle integer value
 def integer_generate(settings, last_value):
@@ -65,7 +78,9 @@ def generate(schema):
             print("[*] field: " + field)
             print("[*] value: " + str(value))
         elif type == 'bool':
-            bool_generate(field_settings)
+            value = bool_generate(field_settings, True)
+            print("[*] field: " + field)
+            print("[*] value: " + str(value))
         else:
             print("[!] type not available")
             return False

@@ -19,6 +19,6 @@
   },
   "powered_on": {
     "type": "bool",
-    "weight": 5
+    "weight": 10
   }
 }
