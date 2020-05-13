@@ -256,7 +256,7 @@ def validate_data(data_location):
                 print("\t[*] valid type: '" + type + "'")
         except:
             print("\t[!] field must have a type set")
-            exit()
+            return False
 
         for attribute in json_data[field]:
             # check if field attribute is valid
@@ -264,10 +264,23 @@ def validate_data(data_location):
                 print("\t[*] valid field attribute: " + attribute)
             else:
                 print("\t[!] '" + attribute + "' is not a valid attribute for a " + json_data[field]["type"] + " field")
-                exit()
-            print("\t\t[*] value: " + str(json_data[field][attribute]))
-            print("\t\t[*] expected type: " + str(valid_field_attributes[type][attribute]))
-            #print("\t\t[*] actual type: " + type(json_data[field][attribute]))
+                return False
+            value = json_data[field][attribute]
+            print("\t\t[*] value: " + str(value))
+            expected_type = valid_field_attributes[type][attribute]
+            print("\t\t[*] expected type: " + str(expected_type))
+            try:
+                if expected_type == "float":
+                    float(value)
+                elif expected_type == "string":
+                    str(value)
+                else:
+                    print(expected_type)
+            except:
+                print("[!] invalid type: " + value + " is not type: " + expected_type)
+                return False
+
+    return True
 
 # welcome banner
 def welcome():
@@ -279,7 +292,11 @@ def main():
 
     welcome()
 
-    validate_data(data_location)
+    if validate_data(data_location):
+        print("[*] schema is valid")
+    else:
+        print("[!] exiting...")
+        exit()
     # try:
     #     run_simulator()
     # except KeyboardInterrupt:
