@@ -1,4 +1,9 @@
-variable "region" {}
+variable "region" {
+  default = "us-west-2"
+}
 variable "vpc_id" {
+  default = ""
+}
+variable "profile" {
   default = ""
 }

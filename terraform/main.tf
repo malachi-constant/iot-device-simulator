@@ -1,6 +1,7 @@
-# create a dynamodb table for locking the state file
-resource "aws_dynamodb_table" "sim-table" {
-  name = "simulation-table"
+
+# DynamoDB Table for Storing Simulation State
+resource "aws_dynamodb_table" "simulation_table-table" {
+  name = join("-",[var.prefix,"simulations"])
   hash_key = "simulation-id"
   read_capacity = 10
   write_capacity = 100
@@ -11,7 +12,7 @@ resource "aws_dynamodb_table" "sim-table" {
   }
 
   tags {
-    Name = "Mojio Simulation State Table"
+    Name = join("-",[var.prefix,"simulations"])
   }
 }
 
