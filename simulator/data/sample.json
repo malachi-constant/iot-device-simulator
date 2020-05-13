@@ -4,7 +4,7 @@
     "from": -100,
     "to": 100,
     "average": 30,
-    "mode": "random"
+    "mode": "linear"
   },
   "speed": {
     "type": "integer",

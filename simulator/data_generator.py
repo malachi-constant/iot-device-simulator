@@ -1,17 +1,24 @@
 import json
 import random
+import calculations
 
 # handle float value
-def float_generate(settings):
+def float_generate(settings, last_value):
     mode = settings['mode']
 
     if mode == 'random':
         value = round(random.triangular(settings['from'], settings['average'], settings['to']),5)
+
     elif mode == 'linear':
-        print(settings)
+        distance_1   = abs(last_value - settings['to'])
+        distance_2   = abs(last_value - settings['from'])
+        min_distance = distance_1 if distance_1 < distance_2 else distance_2
+        value        = round(last_value + (min_distance * (calculations.random_direction() * random.betavariate(2,100))),5)
+
     else:
         print("[!] float mode:" + mode + " not supported")
         exit()
+
     return value
 
 # handle bool value
@@ -33,7 +40,7 @@ def generate(schema):
         field_settings = schema[field]
 
         if type == 'float':
-            value = float_generate(field_settings)
+            value = float_generate(field_settings, 0.0)
             print("[*] field: " + field)
             print("[*] value: " + str(value))
         elif type == 'string':
