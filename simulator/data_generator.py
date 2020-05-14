@@ -73,29 +73,31 @@ def string_generate(settings):
 
 # generate data point
 def generate(schema):
+
+    data = {}
+
     for field in schema:
         type = schema[field]["type"]
         field_settings = schema[field]
 
         if type == 'float':
             value = float_generate(field_settings, 0.0)
-            print("[*] field: " + field)
-            print("[*] value: " + str(value))
+
         elif type == 'string':
             value = string_generate(field_settings)
-            print("[*] field: " + field)
-            print("[*] value: " + str(value))
+
         elif type == 'integer':
             value = integer_generate(field_settings,0)
-            print("[*] field: " + field)
-            print("[*] value: " + str(value))
+
         elif type == 'bool':
             value = bool_generate(field_settings, True)
-            print("[*] field: " + field)
-            print("[*] value: " + str(value))
+
         else:
             print("[!] type not available")
             return False
 
-    return True
+        data_point = {field:value}
+        data.update(data_point)
+
+    return data
         #for attribute in json_data[field]:

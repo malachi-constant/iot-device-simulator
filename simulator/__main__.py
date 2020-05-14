@@ -4,9 +4,6 @@ import random
 import data_generator
 import time
 import argparse
-import sys
-import uuid
-import os
 
 # get program arguments
 parser = argparse.ArgumentParser(description='IoT Device Simulator Built for clevertime Sample Data')
@@ -16,34 +13,32 @@ parser.add_argument('--simulation-table','-T', dest='simulation_table', required
 parser.add_argument('--iot-topic','-t', dest='iot_topic', required=False, default='test',help='Specify a IoT Topic to Publish to.')
 parser.add_argument('--data','-d' ,dest='data', required=False, default='sample',help='Data schema file to use.')
 parser.add_argument('--interval','-i' ,dest='message_interval', required=False, default=1,help='Message Interval in seconds.')
+parser.add_argument('--simulation-length','-l' ,dest='simulation_length', required=False, default=60,help='simulation length in seconds')
 parser.add_argument('--profile', dest='profile', required=False,help='AWS Profile to use.')
 
 args = parser.parse_args()
 
 # globals
-simulation_id     = str(random.randint(10000000,99999999))
-iot_core_endpoint = args.iot_endpoint
-iot_topic         = args.iot_topic
-region            = args.region
-profile           = args.profile
-simulation_table  = args.simulation_table
-message_interval  = args.message_interval
-data_location     = "./data/" + args.data + ".json"
-dynamodb          = boto3.resource('dynamodb', region_name=region)
-valid_types       = ["float", "int", "bool", "string"]
+simulation_id          = str(random.randint(10000000,99999999))
+iot_core_endpoint      = args.iot_endpoint
+iot_topic              = args.iot_topic
+region                 = args.region
+profile                = args.profile
+simulation_table       = args.simulation_table
+message_interval       = args.message_interval
+simulation_length      = args.simulation_length
+data_location          = "./data/" + args.data + ".json"
+dynamodb               = boto3.resource('dynamodb', region_name=region)
+valid_types            = ["float", "int", "bool", "string"]
 valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","average":"float","mode":"string"},"int":{"type":"string","from":"float","to":"float","average":"float","mode":"string"}, "bool":{"type":"string","weight":"float"}, "string":{"type":"string","possibilities":"string"}}
 
 
 def run_simulator():
+
     # set aws profile
     if profile is not None:
         boto3.setup_default_session(profile_name=profile)
         print("[*] Using AWS Profile: " + str(profile))
-
-    # insert logic
-
-
-
 
     trip_json = parseData(trip_data, trip_selection)
 
@@ -185,7 +180,19 @@ def main():
         print("[!] exiting...")
         exit()
 
-    data_generator.generate(schema)
+    for i in range(simulation_length):
+        a = data_generator.generate(schema)
+        print(a)
+        # last_value = {}
+        # last_value.update(a)
+        # print("[*] last value external:")
+        # print(last_value)
+
+        #write_data(a)
+        
+        time.sleep(message_interval)
+
+
     # try:
     #     run_simulator()
     # except KeyboardInterrupt:
