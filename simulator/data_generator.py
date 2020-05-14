@@ -59,7 +59,17 @@ def integer_generate(settings, last_value):
 
 # handle string value
 def string_generate(settings):
-    return True
+    try:
+        possibilities = settings['possibilities']
+    except:
+        print("[*] string fields must have a 'possibilities' attribute")
+    if str(type(possibilities)) == "<class 'list'>":
+        index = random.randint(0,len(possibilities)-1)
+    else:
+        print("[!] possibilites must be a list")
+        exit()
+
+    return possibilities[index]
 
 # generate data point
 def generate(schema):
@@ -72,7 +82,9 @@ def generate(schema):
             print("[*] field: " + field)
             print("[*] value: " + str(value))
         elif type == 'string':
-            string_generate(field_settings)
+            value = string_generate(field_settings)
+            print("[*] field: " + field)
+            print("[*] value: " + str(value))
         elif type == 'integer':
             value = integer_generate(field_settings,0)
             print("[*] field: " + field)
