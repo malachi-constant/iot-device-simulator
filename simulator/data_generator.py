@@ -1,6 +1,7 @@
 import json
 import random
 import calculations
+import simple_data_cache
 
 # handle float value
 def float_generate(settings, last_value):
@@ -46,10 +47,14 @@ def integer_generate(settings, last_value):
         value = int(random.triangular(settings['from'], settings['average'], settings['to']))
 
     elif mode == 'linear':
-        distance_1   = abs(last_value - settings['to'])
-        distance_2   = abs(last_value - settings['from'])
-        min_distance = distance_1 if distance_1 < distance_2 else distance_2
-        value        = int(last_value + (min_distance * (calculations.random_direction() * random.betavariate(2,100))))
+        low          = abs(last_value - settings['to'])
+        high         = abs(last_value - settings['from'])
+        direction    = calculations.random_direction()
+        if direction > 0:
+            go = high
+        else:
+            go = low
+        value        = int(last_value + (go * random.betavariate(2,100)))
 
     else:
         print("[!] integer mode: '" + mode + "' not supported")
@@ -72,13 +77,16 @@ def string_generate(settings):
     return possibilities[index]
 
 # generate data point
-def generate(schema):
+def generate(schema, last_value):
 
     data = {}
 
     for field in schema:
         type = schema[field]["type"]
         field_settings = schema[field]
+        # if bool(last_value):
+        #     last_field_settings = last_value[field]
+        #     print(last_field_settings)
 
         if type == 'float':
             value = float_generate(field_settings, 0.0)
@@ -97,6 +105,9 @@ def generate(schema):
             return False
 
         data_point = {field:value}
+        
+        simple_data_cache.store_value(data_point)
+
         data.update(data_point)
 
     return data

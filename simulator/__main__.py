@@ -29,6 +29,7 @@ message_interval       = args.message_interval
 simulation_length      = args.simulation_length
 data_location          = "./data/" + args.data + ".json"
 dynamodb               = boto3.resource('dynamodb', region_name=region)
+last_value             = {}
 valid_types            = ["float", "int", "bool", "string"]
 valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","average":"float","mode":"string"},"int":{"type":"string","from":"float","to":"float","average":"float","mode":"string"}, "bool":{"type":"string","weight":"float"}, "string":{"type":"string","possibilities":"string"}}
 
@@ -181,15 +182,13 @@ def main():
         exit()
 
     for i in range(simulation_length):
-        a = data_generator.generate(schema)
+        a = data_generator.generate(schema, last_value)
         print(a)
-        # last_value = {}
-        # last_value.update(a)
-        # print("[*] last value external:")
-        # print(last_value)
+
+        last_value.update(a)
 
         #write_data(a)
-        
+
         time.sleep(message_interval)
 
 
