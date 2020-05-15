@@ -54,7 +54,7 @@ def integer_generate(settings, last_value):
     # check last value
     if last_value is None:
         last_value = random.randint(settings['from'], settings['to'])
-
+        #last_value = 250
     mode = settings['mode']
 
     if mode == 'random':
@@ -62,13 +62,17 @@ def integer_generate(settings, last_value):
 
     elif mode == 'linear':
         low          = abs(last_value - settings['to'])
+        #print("[&] low: " + str(low))
         high         = abs(last_value - settings['from'])
+        #print("[&] high: " + str(high))
         direction    = calculations.random_direction()
+        #print("[&] direction: " + str(direction))
         if direction > 0:
-            go = high
+            go = high * direction
         else:
-            go = low
-        value        = int(last_value + (go * random.betavariate(2,100)))
+            go = low * direction
+        #print("[&] go: " + str(go))
+        value = int(last_value + (go * random.betavariate(2,100)))
 
     else:
         print("[!] integer mode: '" + mode + "' not supported")

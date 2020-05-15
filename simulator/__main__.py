@@ -181,10 +181,10 @@ def main():
         exit()
 
     for i in range(simulation_length):
-        a = data_generator.generate(schema)
-        print(a)
+        data = data_generator.generate(schema)
+        print(data)
 
-        #write_data(a)
+        #write_data(data)
 
         time.sleep(message_interval)
 
