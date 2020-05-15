@@ -5,6 +5,11 @@ import simple_data_cache
 
 # handle float value
 def float_generate(settings, last_value):
+
+    # check last value
+    if last_value is None:
+        last_value = random.uniform(settings['from'], settings['to'])
+
     mode = settings['mode']
 
     if mode == 'random':
@@ -25,6 +30,10 @@ def float_generate(settings, last_value):
 # handle bool value
 def bool_generate(settings, last_value):
 
+    # check last value
+    if last_value is None:
+        last_value = True if random.randint(-1,1) > 0 else False
+
     # check if there is a weight
     if 'weight' in settings.keys():
 
@@ -41,6 +50,11 @@ def bool_generate(settings, last_value):
 
 # handle integer value
 def integer_generate(settings, last_value):
+
+    # check last value
+    if last_value is None:
+        last_value = random.randint(settings['from'], settings['to'])
+
     mode = settings['mode']
 
     if mode == 'random':
@@ -77,38 +91,35 @@ def string_generate(settings):
     return possibilities[index]
 
 # generate data point
-def generate(schema, last_value):
+def generate(schema):
 
     data = {}
 
     for field in schema:
         type = schema[field]["type"]
         field_settings = schema[field]
-        # if bool(last_value):
-        #     last_field_settings = last_value[field]
-        #     print(last_field_settings)
+
+        # get last value from data store if it exists
+        last_value = simple_data_cache.get_value(field)
 
         if type == 'float':
-            value = float_generate(field_settings, 0.0)
+            value = float_generate(field_settings, last_value)
 
         elif type == 'string':
             value = string_generate(field_settings)
 
         elif type == 'integer':
-            value = integer_generate(field_settings,0)
+            value = integer_generate(field_settings, last_value)
 
         elif type == 'bool':
-            value = bool_generate(field_settings, True)
+            value = bool_generate(field_settings, last_value)
 
         else:
             print("[!] type not available")
             return False
 
         data_point = {field:value}
-        
         simple_data_cache.store_value(data_point)
-
         data.update(data_point)
 
     return data
-        #for attribute in json_data[field]:
