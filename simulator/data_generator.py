@@ -16,10 +16,14 @@ def float_generate(settings, last_value):
         value = round(random.triangular(settings['from'], settings['average'], settings['to']),5)
 
     elif mode == 'linear':
-        distance_1   = abs(last_value - settings['to'])
-        distance_2   = abs(last_value - settings['from'])
-        min_distance = distance_1 if distance_1 < distance_2 else distance_2
-        value        = round(last_value + (min_distance * (calculations.random_direction() * random.betavariate(2,100))),5)
+        low          = abs(last_value - settings['to'])
+        high         = abs(last_value - settings['from'])
+        direction    = calculations.random_direction()
+        if direction > 0:
+            go = high * direction
+        else:
+            go = low * direction
+        value = round(last_value + (go * random.betavariate(2,100)),5)
 
     else:
         print("[!] float mode: '" + mode + "' not supported")
