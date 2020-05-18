@@ -5,6 +5,7 @@ import data_generator
 import time
 import argparse
 import pathlib
+import logging
 
 # get program arguments
 parser = argparse.ArgumentParser(description='IoT Device Simulator Built for clevertime Sample Data')
@@ -35,13 +36,13 @@ valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","
 # boto3 init
 if profile is not None:
     boto3.setup_default_session(profile_name=profile)
-    print("[*] using aws profile: " + str(profile))
+    logging.debug("[*] using aws profile: " + str(profile))
 dynamodb               = boto3.resource('dynamodb', region_name=region)
 iot_client             = boto3.client('iot-data', region_name=region)
 
 
 def write_data(payload):
-    print("writing to topic: " + iot_topic)
+    logging.debug("writing to topic: " + iot_topic)
     response = iot_client.publish(
         topic= iot_topic,
         qos=0,
@@ -127,14 +128,14 @@ def main():
     schema = open_data(data_location)
 
     if validate_data(schema):
-        print("[*] schema is valid")
+        logging.debug("[*] schema is valid")
     else:
         print("[!] exiting...")
         exit()
 
     for i in range(simulation_length):
         data = data_generator.generate(schema)
-        print(data)
+        logging.debug(data)
 
         if not write_data(json.dumps(data)):
             print("[!] message failed to write to iot core endpoint: " + iot_core_endpoint)
