@@ -19,6 +19,7 @@ def float_generate(settings, last_value):
         low          = abs(last_value - settings['to'])
         high         = abs(last_value - settings['from'])
         direction    = calculations.random_direction()
+        # add condtion here to fix min/max bounds
         if direction > 0:
             go = high * direction
         else:

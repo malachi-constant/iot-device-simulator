@@ -4,6 +4,7 @@ import random
 import data_generator
 import time
 import argparse
+import pathlib
 
 # get program arguments
 parser = argparse.ArgumentParser(description='IoT Device Simulator Built for clevertime Sample Data')
@@ -27,7 +28,7 @@ profile                = args.profile
 simulation_table       = args.simulation_table
 message_interval       = args.message_interval
 simulation_length      = args.simulation_length
-data_location          = "./data/" + args.data + ".json"
+data_location          = "/data/" + args.data + ".json"
 dynamodb               = boto3.resource('dynamodb', region_name=region)
 valid_types            = ["float", "int", "bool", "string"]
 valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","average":"float","mode":"string"},"int":{"type":"string","from":"float","to":"float","average":"float","mode":"string"}, "bool":{"type":"string","weight":"float"}, "string":{"type":"string","possibilities":"string"}}
@@ -147,9 +148,11 @@ def open_data(data_location):
 
     # open file
     try:
-        file  = open(data_location,"r")
+        abs_path = str(pathlib.Path(__file__).parent.absolute())
+        file     = open(abs_path + data_location,"r")
+
     except:
-        print("[!] schema file at " + data_location + " does not exist")
+        print("[!] schema file at " + abs_path + data_location + " does not exist")
         exit()
     file_data = file.read()
 
