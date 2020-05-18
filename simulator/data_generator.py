@@ -5,7 +5,6 @@ import simple_data_cache
 
 # handle float value
 def float_generate(settings, last_value):
-
     # check last value
     if last_value is None:
         last_value = random.uniform(settings['from'], settings['to'])
@@ -19,11 +18,12 @@ def float_generate(settings, last_value):
         low          = abs(last_value - settings['to'])
         high         = abs(last_value - settings['from'])
         direction    = calculations.random_direction()
-        # add condtion here to fix min/max bounds
-        if direction > 0:
-            go = high * direction
+
+        if direction > 0 and high is not 0:
+            go = high
         else:
-            go = low * direction
+            go = low * -1
+
         value = round(last_value + (go * random.betavariate(2,100)),5)
 
     else:
@@ -59,24 +59,21 @@ def integer_generate(settings, last_value):
     # check last value
     if last_value is None:
         last_value = random.randint(settings['from'], settings['to'])
-        #last_value = 250
+        last_value = 250
     mode = settings['mode']
 
     if mode == 'random':
         value = int(random.triangular(settings['from'], settings['average'], settings['to']))
 
     elif mode == 'linear':
-        low          = abs(last_value - settings['to'])
-        #print("[&] low: " + str(low))
-        high         = abs(last_value - settings['from'])
-        #print("[&] high: " + str(high))
+        low          = abs(last_value - settings['from'])
+        high         = abs(last_value - settings['to'])
         direction    = calculations.random_direction()
-        #print("[&] direction: " + str(direction))
-        if direction > 0:
-            go = high * direction
+        
+        if direction > 0 and high is not 0:
+            go = high
         else:
-            go = low * direction
-        #print("[&] go: " + str(go))
+            go = low * -1
         value = int(last_value + (go * random.betavariate(2,100)))
 
     else:
