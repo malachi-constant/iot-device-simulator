@@ -29,26 +29,16 @@ simulation_table       = args.simulation_table
 message_interval       = args.message_interval
 simulation_length      = args.simulation_length
 data_location          = "/data/" + args.data + ".json"
-
-# set profile
-if profile is not None:
-    boto3.setup_default_session(profile_name=profile)
-    print("[*] using aws profile: " + str(profile))
-    
-dynamodb               = boto3.resource('dynamodb', region_name=region)
-iot_client             = boto3.client('iot-data', region_name=region)
 valid_types            = ["float", "int", "bool", "string"]
 valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","average":"float","mode":"string"},"int":{"type":"string","from":"float","to":"float","average":"float","mode":"string"}, "bool":{"type":"string","weight":"float"}, "string":{"type":"string","possibilities":"string"}}
 
-    # try:
-    #     sim_table.delete_item(
-    #     Key={
-    #         'simulation-id': sim_id,
-    #     }
-    #     )
-    # except:
-    #     print("\nDynamoDB Table for Simulation State Not Found.\n No record to delete...")
-    #     time.sleep(2)
+# boto3 init
+if profile is not None:
+    boto3.setup_default_session(profile_name=profile)
+    print("[*] using aws profile: " + str(profile))
+dynamodb               = boto3.resource('dynamodb', region_name=region)
+iot_client             = boto3.client('iot-data', region_name=region)
+
 
 def write_data(payload):
     print("writing to topic: " + iot_topic)
@@ -151,24 +141,6 @@ def main():
             exit()
 
         time.sleep(message_interval)
-
-
-    # try:
-    #     run_simulator()
-    # except KeyboardInterrupt:
-    #     print("[*] Ending Simulation: " + sim_id + "")
-    #     try:
-    #         sim_table = dynamodb.Table(simulation_table)
-    #         sim_table.delete_item(
-    #         Key={
-    #             'simulation-id': sim_id,
-    #         }
-    #         )
-    #     except:
-    #         print("\nDynamoDB Table for Simulation State Not Found.\n No record to delete...")
-    #         time.sleep(2)
-    #
-    # print("[*] Simulation Completed")
 
 if __name__ == '__main__':
     main()
