@@ -150,7 +150,6 @@ def open_data(data_location):
     try:
         abs_path = str(pathlib.Path(__file__).parent.absolute())
         file     = open(abs_path + data_location,"r")
-
     except:
         print("[!] schema file at " + abs_path + data_location + " does not exist")
         exit()
