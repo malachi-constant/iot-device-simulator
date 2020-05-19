@@ -17,6 +17,8 @@ parser.add_argument('--data','-d' ,dest='data', required=False, default='sample'
 parser.add_argument('--interval','-i' ,dest='message_interval', required=False, default=1,help='Message Interval in seconds.')
 parser.add_argument('--simulation-length','-l' ,dest='simulation_length', required=False, default=60,help='simulation length in seconds')
 parser.add_argument('--profile', dest='profile', required=False,help='AWS Profile to use.')
+parser.add_argument("--debug", dest='debug', help="show debug logs",action="store_true")
+parser.add_argument("-v", '--verbose', help="show info logs",action="store_true")
 
 args = parser.parse_args()
 
@@ -33,16 +35,21 @@ data_location          = "/data/" + args.data + ".json"
 valid_types            = ["float", "int", "bool", "string"]
 valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","average":"float","mode":"string"},"int":{"type":"string","from":"float","to":"float","average":"float","mode":"string"}, "bool":{"type":"string","weight":"float"}, "string":{"type":"string","possibilities":"string"}}
 
+if args.verbose:
+    logging.basicConfig(level=logging.INFO)
+elif args.debug:
+    logging.basicConfig(level=logging.DEBUG)
+
 # boto3 init
 if profile is not None:
     boto3.setup_default_session(profile_name=profile)
-    logging.debug("[*] using aws profile: " + str(profile))
+    logging.info("[*] using aws profile: " + str(profile))
 dynamodb               = boto3.resource('dynamodb', region_name=region)
 iot_client             = boto3.client('iot-data', region_name=region)
 
 
 def write_data(payload):
-    logging.debug("writing to topic: " + iot_topic)
+    logging.info("writing to topic: " + iot_topic)
     response = iot_client.publish(
         topic= iot_topic,
         qos=0,
@@ -58,36 +65,36 @@ def write_data(payload):
 def validate_data(json_data):
 
     # check schema
-    print("[*] validating fields...")
+    logging.info("[*] validating fields...")
     for field in json_data:
-        print("[*] field: " + field)
+        logging.info("[*] field: " + field)
         # check if field has a type
         try:
             if json_data[field]["type"] in valid_types:
                 type = json_data[field]["type"]
-                print("\t[*] valid type: '" + type + "'")
+                logging.info("\t[*] valid type: '" + type + "'")
         except:
-            print("\t[!] field must have a type set")
+            logging.error("\t[!] field must have a type set")
             return False
 
         for attribute in json_data[field]:
             # check if field attribute is valid
             if attribute in valid_field_attributes[type]:
-                print("\t[*] valid field attribute: " + attribute)
+                logging.info("\t[*] valid field attribute: " + attribute)
             else:
-                print("\t[!] '" + attribute + "' is not a valid attribute for a " + json_data[field]["type"] + " field")
+                logging.info("\t[!] '" + attribute + "' is not a valid attribute for a " + json_data[field]["type"] + " field")
                 return False
             value = json_data[field][attribute]
-            print("\t\t[*] value: " + str(value))
+            logging.info("\t\t[*] value: " + str(value))
             expected_type = valid_field_attributes[type][attribute]
-            print("\t\t[*] expected type: " + str(expected_type))
+            logging.info("\t\t[*] expected type: " + str(expected_type))
             try:
                 if expected_type == "float":
                     float(value)
                 elif expected_type == "string":
                     str(value)
                 else:
-                    print(expected_type)
+                    logging.info(expected_type)
             except:
                 print("[!] invalid type: " + value + " is not type: " + expected_type)
                 return False
@@ -95,14 +102,14 @@ def validate_data(json_data):
     return True
 
 def open_data(data_location):
-    print("[*] data file: " + data_location)
+    logging.info("[*] data file: " + data_location)
 
     # open file
     try:
         abs_path = str(pathlib.Path(__file__).parent.absolute())
         file     = open(abs_path + data_location,"r")
     except:
-        print("[!] schema file at " + abs_path + data_location + " does not exist")
+        logging.error("[!] schema file at " + abs_path + data_location + " does not exist")
         exit()
     file_data = file.read()
 
@@ -110,9 +117,9 @@ def open_data(data_location):
     try:
         json_data = json.loads(file_data)
     except:
-        print("[!] schema file at " + data_location + " is not valid.json.")
+        logging.error("[!] schema file at " + data_location + " is not valid.json.")
         exit()
-    print("[*] json is valid")
+    logging.info("[*] json is valid")
     return json_data
 
 # welcome banner
@@ -128,17 +135,17 @@ def main():
     schema = open_data(data_location)
 
     if validate_data(schema):
-        logging.debug("[*] schema is valid")
+        logging.info("[*] schema is valid")
     else:
         print("[!] exiting...")
         exit()
 
     for i in range(simulation_length):
         data = data_generator.generate(schema)
-        logging.debug(data)
+        logging.info(data)
 
         if not write_data(json.dumps(data)):
-            print("[!] message failed to write to iot core endpoint: " + iot_core_endpoint)
+            logging.warning("[!] message failed to write to iot core endpoint: " + iot_core_endpoint)
             exit()
 
         time.sleep(message_interval)
