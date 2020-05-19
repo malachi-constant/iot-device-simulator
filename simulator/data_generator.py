@@ -1,6 +1,5 @@
 import json
 import random
-import calculations
 import simple_data_cache
 import logging
 
@@ -18,7 +17,7 @@ def float_generate(settings, last_value):
     elif mode == 'linear':
         low          = abs(last_value - settings['to'])
         high         = abs(last_value - settings['from'])
-        direction    = calculations.random_direction()
+        direction    = [-1,1][random.randrange(2)]
 
         if direction > 0 and high is not 0:
             go = high
@@ -50,7 +49,7 @@ def bool_generate(settings, last_value):
             weight = settings['weight']
     # calculate weight and allow switch if random is over weight
     if random.randint(0,100) > weight:
-        return False if calculations.random_direction() == -1 else True
+        return False if [-1,1][random.randrange(2)] == -1 else True
     else:
         return last_value
 
@@ -60,7 +59,7 @@ def integer_generate(settings, last_value):
     # check last value
     if last_value is None:
         last_value = random.randint(settings['from'], settings['to'])
-        last_value = 250
+
     mode = settings['mode']
 
     if mode == 'random':
@@ -69,7 +68,7 @@ def integer_generate(settings, last_value):
     elif mode == 'linear':
         low          = abs(last_value - settings['from'])
         high         = abs(last_value - settings['to'])
-        direction    = calculations.random_direction()
+        direction    = [-1,1][random.randrange(2)]
 
         if direction > 0 and high is not 0:
             go = high
@@ -88,11 +87,11 @@ def string_generate(settings):
     try:
         possibilities = settings['possibilities']
     except:
-        print("[*] string fields must have a 'possibilities' attribute")
+        logging.error("[*] string fields must have a 'possibilities' attribute")
     if str(type(possibilities)) == "<class 'list'>":
         index = random.randint(0,len(possibilities)-1)
     else:
-        print("[!] possibilites must be a list")
+        logging.error("[!] possibilites must be a list")
         exit()
 
     return possibilities[index]
