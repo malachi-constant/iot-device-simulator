@@ -8,15 +8,15 @@ import pathlib
 import logging
 
 # get program arguments
-parser = argparse.ArgumentParser(description='IoT Device Simulator Built for clevertime Sample Data')
-parser.add_argument('--region','-r', dest='region', required=False, default='us-west-2',help='Specify the AWS Region')
-parser.add_argument('--iot-endpoint','-e', dest='iot_endpoint', required=False, help='Specify the AWS IoT Core Endpoint to publish to.')
-parser.add_argument('--simulation-table','-T', dest='simulation_table', required=False, default='simulation-table',help='Specify a DynamoDB Table for storing simulation state.')
-parser.add_argument('--iot-topic','-t', dest='iot_topic', required=False, default='simulator/test',help='Specify a IoT Topic to Publish to.')
-parser.add_argument('--data','-d' ,dest='data', required=False, default='sample',help='Data schema file to use.')
-parser.add_argument('--interval','-i' ,dest='message_interval', required=False, default=1,help='Message Interval in seconds.')
+parser = argparse.ArgumentParser(description='iot device simulator')
+parser.add_argument('--region','-r', dest='region', required=False, default='us-west-2',help='specify the aws region')
+parser.add_argument('--iot-endpoint','-e', dest='iot_endpoint', required=False, help='specify the aws iot core endpoint to publish to')
+parser.add_argument('--simulation-table','-T', dest='simulation_table', required=False, default='simulation-table',help='specify a dynamodb table for storing simulation state.')
+parser.add_argument('--iot-topic','-t', dest='iot_topic', required=False, default='simulator/test',help='specify a topic to publish to')
+parser.add_argument('--data','-d' ,dest='data', required=False, default='sample',help='data schema file to use')
+parser.add_argument('--interval','-i' ,dest='message_interval', required=False, default=1000,help='message interval in milliseconds')
 parser.add_argument('--simulation-length','-l' ,dest='simulation_length', required=False, default=60,help='simulation length in seconds')
-parser.add_argument('--profile', dest='profile', required=False,help='AWS Profile to use.')
+parser.add_argument('--profile', dest='profile', required=False,help='aws profile to use')
 parser.add_argument("--debug", dest='debug', help="show debug logs",action="store_true")
 parser.add_argument("-v", '--verbose', help="show info logs",action="store_true")
 
@@ -29,7 +29,7 @@ iot_topic              = args.iot_topic
 region                 = args.region
 profile                = args.profile
 simulation_table       = args.simulation_table
-message_interval       = args.message_interval
+message_interval       = args.message_interval / 1000
 simulation_length      = args.simulation_length
 data_location          = "/data/" + args.data + ".json"
 valid_types            = ["float", "int", "bool", "string"]
@@ -149,6 +149,8 @@ def main():
             exit()
 
         time.sleep(message_interval)
+
+    print("[*] simulation completed")
 
 if __name__ == '__main__':
     main()
