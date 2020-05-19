@@ -1,3 +1,5 @@
+import logging
+
 # data store
 data_store = {}
 
@@ -7,7 +9,7 @@ def store_value (data):
     try:
         data_store.update(data)
     except:
-        print("[!] data point was not stored...")
+        logging.error("[!] data point was not stored...")
         return False
     return True
 

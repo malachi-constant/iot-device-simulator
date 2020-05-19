@@ -2,6 +2,7 @@ import json
 import random
 import calculations
 import simple_data_cache
+import logging
 
 # handle float value
 def float_generate(settings, last_value):
@@ -27,7 +28,7 @@ def float_generate(settings, last_value):
         value = round(last_value + (go * random.betavariate(2,100)),5)
 
     else:
-        print("[!] float mode: '" + mode + "' not supported")
+        logging.error("[!] float mode: '" + mode + "' not supported")
         exit()
 
     return value
@@ -69,7 +70,7 @@ def integer_generate(settings, last_value):
         low          = abs(last_value - settings['from'])
         high         = abs(last_value - settings['to'])
         direction    = calculations.random_direction()
-        
+
         if direction > 0 and high is not 0:
             go = high
         else:
