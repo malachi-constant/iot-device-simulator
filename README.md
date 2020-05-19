@@ -9,27 +9,32 @@ IoT Device Simulator Built for clevertime Sample Data
 
 ### Usage
 ```
-usage: __main__.py [-h] [--region REGION] [--iot-endpoint IOT_ENDPOINT]
-                   [--simulation-table SIMULATION_TABLE]
-                   [--iot-topic IOT_TOPIC] [--data DATA]
-                   [--interval MESSAGE_INTERVAL] [--profile PROFILE]
+usage: simulator [-h] [--region REGION] [--iot-endpoint IOT_ENDPOINT]
+                 [--simulation-table SIMULATION_TABLE] [--iot-topic IOT_TOPIC]
+                 [--data DATA] [--interval MESSAGE_INTERVAL]
+                 [--simulation-length SIMULATION_LENGTH] [--profile PROFILE]
+                 [--debug] [-v]
 
-IoT Device Simulator
+iot device simulator
 
 optional arguments:
   -h, --help            show this help message and exit
   --region REGION, -r REGION
-                        Specify the AWS Region
+                        specify the aws region
   --iot-endpoint IOT_ENDPOINT, -e IOT_ENDPOINT
-                        Specify the AWS IoT Core Endpoint to publish to.
+                        specify the aws iot core endpoint to publish to
   --simulation-table SIMULATION_TABLE, -T SIMULATION_TABLE
-                        Specify a DynamoDB Table for storing simulation state.
+                        specify a dynamodb table for storing simulation state.
   --iot-topic IOT_TOPIC, -t IOT_TOPIC
-                        Specify a IoT Topic to Publish to.
-  --data DATA, -d DATA  Data schema file to use.
+                        specify a topic to publish to
+  --data DATA, -d DATA  data schema file to use
   --interval MESSAGE_INTERVAL, -i MESSAGE_INTERVAL
-                        Message Interval in seconds.
-  --profile PROFILE     AWS Profile to use.
+                        message interval in milliseconds
+  --simulation-length SIMULATION_LENGTH, -l SIMULATION_LENGTH
+                        simulation length in seconds
+  --profile PROFILE     aws profile to use
+  --debug               show debug logs
+  -v, --verbose         show info logs
 ```
 #### Example Execution
 ```
