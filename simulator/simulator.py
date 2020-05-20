@@ -55,7 +55,7 @@ def write_data(payload):
         qos=0,
         payload=payload
     )
-
+    
     if response['ResponseMetadata']['HTTPStatusCode'] == 200:
         return True
     else:
