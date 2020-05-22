@@ -10,7 +10,6 @@ import logging
 # get program arguments
 parser = argparse.ArgumentParser(description='iot device simulator')
 parser.add_argument('--region','-r', dest='region', required=False, default='us-west-2',help='specify the aws region')
-parser.add_argument('--iot-endpoint','-e', dest='iot_endpoint', required=False, help='specify the aws iot core endpoint to publish to')
 parser.add_argument('--simulation-table','-T', dest='simulation_table', required=False ,help='specify a dynamodb table for storing simulation state.')
 parser.add_argument('--iot-topic','-t', dest='iot_topic', required=False, default='simulator/test',help='specify a topic to publish to')
 parser.add_argument('--data','-d' ,dest='data', required=False, default='sample',help='data schema file to use')
@@ -24,7 +23,6 @@ args = parser.parse_args()
 
 # globals
 simulation_id          = str(random.randint(10000000,99999999))
-iot_core_endpoint      = args.iot_endpoint
 iot_topic              = args.iot_topic
 region                 = args.region
 profile                = args.profile
@@ -44,10 +42,11 @@ elif args.debug:
 if profile is not None:
     boto3.setup_default_session(profile_name=profile)
     logging.info("[*] using aws profile: " + str(profile))
+
 dynamodb               = boto3.resource('dynamodb', region_name=region)
 iot_client             = boto3.client('iot-data', region_name=region)
 
-
+# write data to iot core
 def write_data(payload):
     logging.info("writing to topic: " + iot_topic)
     response = iot_client.publish(
@@ -55,7 +54,7 @@ def write_data(payload):
         qos=0,
         payload=payload
     )
-
+    print(response)
     if response['ResponseMetadata']['HTTPStatusCode'] == 200:
         return True
     else:
@@ -163,7 +162,7 @@ def main():
         logging.info(data)
 
         if not write_data(json.dumps(data)):
-            logging.warning("[!] message failed to write to iot core endpoint: " + iot_core_endpoint)
+            logging.warning("[!] message failed to write to iot core endpoint")
             exit()
 
         time.sleep(message_interval)
