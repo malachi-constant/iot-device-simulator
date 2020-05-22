@@ -14,7 +14,7 @@ parser.add_argument('--simulation-table','-T', dest='simulation_table', required
 parser.add_argument('--iot-topic','-t', dest='iot_topic', required=False, default='simulator/test',help='specify a topic to publish to')
 parser.add_argument('--data','-d' ,dest='data', required=False, default='sample',help='data schema file to use')
 parser.add_argument('--interval','-i' ,dest='message_interval', required=False, default=1000,help='message interval in milliseconds')
-parser.add_argument('--simulation-length','-l' ,dest='simulation_length', required=False, default=60,help='simulation length in seconds')
+parser.add_argument('--simulation-length','-l' ,dest='simulation_duration', required=False, default=60,help='simulation length in seconds')
 parser.add_argument('--profile', dest='profile', required=False,help='aws profile to use')
 parser.add_argument("--debug", dest='debug', help="show debug logs",action="store_true")
 parser.add_argument("-v", '--verbose', help="show info logs",action="store_true")
@@ -28,7 +28,7 @@ region                 = args.region
 profile                = args.profile
 simulation_table       = args.simulation_table
 message_interval       = args.message_interval / 1000
-simulation_length      = args.simulation_length
+simulation_duration      = args.simulation_duration
 data_location          = "/data/" + args.data + ".json"
 valid_types            = ["float", "int", "bool", "string"]
 valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","average":"float","mode":"string"},"int":{"type":"string","from":"float","to":"float","average":"float","mode":"string"}, "bool":{"type":"string","weight":"float"}, "string":{"type":"string","possibilities":"string"}}
@@ -148,8 +148,8 @@ def main():
                Item={
                     'simulation_id': simulation_id,
                     'state': 'RUNNING',
-                    'device_id': str(second_item['device_id']),
-                    'number_of_messages': total_messages
+                    'duration': simulation_duration,
+                    'interval': message_interval
                 }
             )
         except:
@@ -157,7 +157,7 @@ def main():
             time.sleep(2)
 
     # run simulation
-    for i in range(simulation_length):
+    for i in range(simulation_duration):
         data = data_generator.generate(schema)
         logging.info(data)
 
