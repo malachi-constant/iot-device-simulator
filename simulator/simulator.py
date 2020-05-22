@@ -11,7 +11,7 @@ import logging
 parser = argparse.ArgumentParser(description='iot device simulator')
 parser.add_argument('--region','-r', dest='region', required=False, default='us-west-2',help='specify the aws region')
 parser.add_argument('--iot-endpoint','-e', dest='iot_endpoint', required=False, help='specify the aws iot core endpoint to publish to')
-parser.add_argument('--simulation-table','-T', dest='simulation_table', required=False, default='simulation-table',help='specify a dynamodb table for storing simulation state.')
+parser.add_argument('--simulation-table','-T', dest='simulation_table', required=False ,help='specify a dynamodb table for storing simulation state.')
 parser.add_argument('--iot-topic','-t', dest='iot_topic', required=False, default='simulator/test',help='specify a topic to publish to')
 parser.add_argument('--data','-d' ,dest='data', required=False, default='sample',help='data schema file to use')
 parser.add_argument('--interval','-i' ,dest='message_interval', required=False, default=1000,help='message interval in milliseconds')
@@ -55,7 +55,7 @@ def write_data(payload):
         qos=0,
         payload=payload
     )
-    
+
     if response['ResponseMetadata']['HTTPStatusCode'] == 200:
         return True
     else:
@@ -139,6 +139,23 @@ def main():
     else:
         print("[!] exiting...")
         exit()
+
+    # simulation state
+    if simulation_table is not None:
+        logging.info("[*] updating simulation state with simulation: " + simulation_id)
+        try:
+            dynamo_table = dynamodb.Table(simulation_table)
+            dynamo_table.put_item(
+               Item={
+                    'simulation_id': simulation_id,
+                    'state': 'RUNNING',
+                    'device_id': str(second_item['device_id']),
+                    'number_of_messages': total_messages
+                }
+            )
+        except:
+            print("\nDynamoDB Table for Simulation State Not Found.\n No table will be used...")
+            time.sleep(2)
 
     for i in range(simulation_length):
         data = data_generator.generate(schema)

@@ -2,12 +2,12 @@
 # dynamodb table for storing simulation state
 resource "aws_dynamodb_table" "simulation_table-table" {
   name           = join("-", [var.prefix, "simulations"])
-  hash_key       = "simulation-id"
+  hash_key       = "simulation_id"
   read_capacity  = 10
   write_capacity = 100
 
   attribute {
-    name = "simulation-id"
+    name = "simulation_id"
     type = "S"
   }
 
