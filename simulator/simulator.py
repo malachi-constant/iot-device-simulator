@@ -2,6 +2,7 @@ import boto3
 import json
 import random
 import data_generator
+import dynamo
 import time
 import argparse
 import pathlib
@@ -141,20 +142,7 @@ def main():
 
     # simulation state
     if simulation_table is not None:
-        logging.info("[*] updating simulation state with simulation: " + simulation_id)
-        try:
-            dynamo_table = dynamodb.Table(simulation_table)
-            dynamo_table.put_item(
-               Item={
-                    'simulation_id': simulation_id,
-                    'state': 'RUNNING',
-                    'duration': simulation_duration,
-                    'interval': message_interval
-                }
-            )
-        except:
-            logging.info("\n[!] dynamodb table: " + simulation_table + " not found")
-            time.sleep(2)
+        dynamo.create_simulation_record(dynamodb, simulation_table, simulation_id, simulation_duration, message_interval)
 
     # run simulation
     for i in range(simulation_duration):
@@ -169,5 +157,12 @@ def main():
 
     print("[*] simulation completed")
 
+    if simulation_table is not None:
+        dynamo.delete_simulation_record(dynamodb, simulation_table, simulation_id)
+
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        logging.info("[*] ending simulation: " + simulation_id + "")
+        dynamo.delete_simulation_record(dynamodb, simulation_table, simulation_id)
