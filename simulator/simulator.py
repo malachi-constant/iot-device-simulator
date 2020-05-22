@@ -34,6 +34,7 @@ data_location          = "/data/" + args.data + ".json"
 valid_types            = ["float", "int", "bool", "string"]
 valid_field_attributes = {"float":{"type":"string","from":"float","to":"float","average":"float","mode":"string"},"int":{"type":"string","from":"float","to":"float","average":"float","mode":"string"}, "bool":{"type":"string","weight":"float"}, "string":{"type":"string","possibilities":"string"}}
 
+# logging settings
 if args.verbose:
     logging.basicConfig(level=logging.INFO)
 elif args.debug:
