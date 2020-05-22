@@ -154,9 +154,10 @@ def main():
                 }
             )
         except:
-            print("\nDynamoDB Table for Simulation State Not Found.\n No table will be used...")
+            logging.info("\n[!] dynamodb table: " + simulation_table + " not found")
             time.sleep(2)
 
+    # run simulation
     for i in range(simulation_length):
         data = data_generator.generate(schema)
         logging.info(data)
