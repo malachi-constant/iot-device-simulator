@@ -158,6 +158,7 @@ def main():
 
     print("[*] simulation completed")
 
+    # update state
     if simulation_table is not None:
         dynamo.delete_simulation_record(dynamodb, simulation_table, simulation_id)
 
