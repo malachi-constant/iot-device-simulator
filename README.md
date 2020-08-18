@@ -1,5 +1,5 @@
 ### clevertime Simulator Usage
-IoT Device Simulator Built for clevertime Sample Data
+iot device simulator built for custom data
 
 ### Prerequisites
 ##### Python3
@@ -38,5 +38,5 @@ optional arguments:
 ```
 #### Example Execution
 ```
-python3 clevertime-sim.py --region us-east-1 --iot-endpoint a28t31er3mx77a-ats.iot.us-east-1.amazonaws.com --simulation-table simulation-table-name --iot-topic connectedcar/telemetry/test
+python3 iot-device-simulator --region us-east-1 --iot-endpoint a28t31er3mx77a-ats.iot.us-east-1.amazonaws.com --simulation-table simulation-table-name --iot-topic connectedcar/telemetry/test
 ```
