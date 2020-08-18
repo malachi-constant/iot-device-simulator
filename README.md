@@ -1,4 +1,4 @@
-### clevertime Simulator Usage
+### Usage
 iot device simulator built for custom data
 
 ### Prerequisites
