@@ -68,6 +68,10 @@ resource "aws_launch_configuration" "simulation_fleet" {
 # userdata
 data "template_file" "simulation_fleet" {
   template = "${file("./scripts/sim-userdata.sh")}"
+
+  vars = {
+    s3_bucket = aws
+  }
 }
 
 
