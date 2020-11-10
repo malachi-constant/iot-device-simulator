@@ -38,9 +38,16 @@ optional arguments:
 ```
 #### Example Execution
 ```
-python simulator
-```
+> python simulator --profile malachi -t "test"
+[*] welcome to the iot device simulator !
 
+[*] beginning simulation ...
+{'ResponseMetadata': {'RequestId': '9b8a6624-a100-bb14-326b-ec9b93728932', 'HTTPStatusCode': 200, 'HTTPHeaders': {'content-type': 'application/json', 'content-length': '65', 'date': 'Tue, 10 Nov 2020 20:40:52 GMT', 'x-amzn-requestid': '9b8a6624-a100-bb14-326b-ec9b93728932', 'connection': 'keep-alive'}, 'RetryAttempts': 0}}
+{'ResponseMetadata': {'RequestId': 'd0a66891-eb69-662d-9a05-5fa69bde8def', 'HTTPStatusCode': 200, 'HTTPHeaders': {'content-type': 'application/json', 'content-length': '65', 'date': 'Tue, 10 Nov 2020 20:40:53 GMT', 'x-amzn-requestid': 'd0a66891-eb69-662d-9a05-5fa69bde8def', 'connection': 'keep-alive'}, 'RetryAttempts': 0}}
+{'ResponseMetadata': {'RequestId': 'aca449f9-3fa6-2c25-8691-6d9ab0776db0', 'HTTPStatusCode': 200, 'HTTPHeaders': {'content-type': 'application/json', 'content-length': '65', 'date': 'Tue, 10 Nov 2020 20:40:54 GMT', 'x-amzn-requestid': 'aca449f9-3fa6-2c25-8691-6d9ab0776db0', 'connection': 'keep-alive'}, 'RetryAttempts': 0}}
+{'ResponseMetadata': {'RequestId': '4a1b3a75-725a-fb30-71a5-392c19cd0e39', 'HTTPStatusCode': 200, 'HTTPHeaders': {'content-type': 'application/json', 'content-length': '65', 'date': 'Tue, 10 Nov 2020 20:40:55 GMT', 'x-amzn-requestid': '4a1b3a75-725a-fb30-71a5-392c19cd0e39', 'connection': 'keep-alive'}, 'RetryAttempts': 0}}
+```
+![Example Output](/images/iot-core.png)
 
 #### Creating Data Schema
 You can define the type of data your simulator publishes.
