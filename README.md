@@ -20,19 +20,21 @@ iot device simulator
 optional arguments:
   -h, --help            show this help message and exit
   --region REGION, -r REGION
-                        specify the aws region
+                        specify the aws region (default: us-west-2)
   --simulation-table SIMULATION_TABLE, -T SIMULATION_TABLE
-                        specify a dynamodb table for storing simulation state.
+                        specify a dynamodb table for storing simulation state. (default: null)
   --iot-topic IOT_TOPIC, -t IOT_TOPIC
-                        specify a topic to publish to
+                        specify a topic to publish to (default: 'simulator/test')
   --data DATA, -d DATA  data schema file to use
   --interval MESSAGE_INTERVAL, -i MESSAGE_INTERVAL
-                        message interval in milliseconds
+                        message interval in milliseconds (default: 1000)
   --simulation-length SIMULATION_DURATION, -l SIMULATION_DURATION
-                        simulation length in seconds
-  --profile PROFILE     aws profile to use
+                        simulation length in seconds (default: 60)
+  --profile PROFILE     aws profile to use (default: null)
   --debug               show debug logs
   -v, --verbose         show info logs
+
+
 ```
 #### Example Execution
 ```
