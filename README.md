@@ -2,10 +2,8 @@
 iot device simulator built for custom data
 
 ### Prerequisites
-##### Python3
-`brew install python3`
-##### Boto3
-`pip install boto3`
+- Python 3
+- Boto3
 
 ### Usage
 ```
