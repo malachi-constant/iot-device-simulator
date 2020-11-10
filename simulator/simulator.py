@@ -127,6 +127,12 @@ def open_data(data_location):
 def welcome():
     print("[*] welcome to the iot device simulator !\n")
     print("[*] beginning simulation ...")
+    print(f"[*] iot topic: {iot_topic}")
+    print(f"[*] region: {region}")
+    print(f"[*] aws profile: {profile}")
+    print(f"[*] message interval: {message_interval}s")
+    print(f"[*] simulation duration: {simulation_duration}s")
+    print(f"[*] data file location: .{data_location}")
 
 # main entrypoint
 def main():
